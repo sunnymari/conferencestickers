@@ -20,12 +20,17 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>MSSupportedPresentationContexts</key>
+	<array>
+		<string>MSMessagesAppPresentationContextMessages</string>
+		<string>MSMessagesAppPresentationContextMedia</string>
+	</array>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.message-payload-provider</string>
 		<key>NSExtensionPrincipalClass</key>
-		<string>StickerBrowserViewController</string>
+		<string>$(PRODUCT_MODULE_NAME).MessagesViewController</string>
 	</dict>
 	<key>NSStickerSharingLevel</key>
 	<string>OS</string>

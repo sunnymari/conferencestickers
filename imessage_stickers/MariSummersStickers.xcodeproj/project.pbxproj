@@ -10,6 +10,10 @@
 		A1B2C3E01E28134F0008D492 /* StickerPackExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A1B2C3DD1E28134F0008D492 /* StickerPackExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A1B2C3E21E28134F0008D492 /* Stickers.xcstickers in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3E11E28134F0008D492 /* Stickers.xcstickers */; };
 		A1B2C3E31E28134F0008D492 /* Stickers.xcstickers in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3E11E28134F0008D492 /* Stickers.xcstickers */; };
+		A1B2C4111E28134F0008D492 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C4011E28134F0008D492 /* MessagesViewController.swift */; };
+		A1B2C4121E28134F0008D492 /* Sticker1.png in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C4021E28134F0008D492 /* Sticker1.png */; };
+		A1B2C4131E28134F0008D492 /* Sticker2.png in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C4031E28134F0008D492 /* Sticker2.png */; };
+		A1B2C4141E28134F0008D492 /* Sticker3.png in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C4041E28134F0008D492 /* Sticker3.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +46,10 @@
 		A1B2C3E11E28134F0008D492 /* Stickers.xcstickers */ = {isa = PBXFileReference; lastKnownFileType = folder.stickers; name = Stickers.xcstickers; path = StickerPackExtension/Stickers.xcstickers; sourceTree = "<group>"; };
 		A1B2C3F11E28134F0008D492 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A1B2C3F21E28134F0008D492 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A1B2C4011E28134F0008D492 /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
+		A1B2C4021E28134F0008D492 /* Sticker1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Sticker1.png; sourceTree = "<group>"; };
+		A1B2C4031E28134F0008D492 /* Sticker2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Sticker2.png; sourceTree = "<group>"; };
+		A1B2C4041E28134F0008D492 /* Sticker3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Sticker3.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -75,9 +83,21 @@
 		A1B2C3F31E28134F0008D492 /* StickerPackExtension */ = {
 			isa = PBXGroup;
 			children = (
+				A1B2C4011E28134F0008D492 /* MessagesViewController.swift */,
 				A1B2C3F21E28134F0008D492 /* Info.plist */,
+				A1B2C4051E28134F0008D492 /* Stickers */,
 			);
 			path = StickerPackExtension;
+			sourceTree = "<group>";
+		};
+		A1B2C4051E28134F0008D492 /* Stickers */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C4021E28134F0008D492 /* Sticker1.png */,
+				A1B2C4031E28134F0008D492 /* Sticker2.png */,
+				A1B2C4041E28134F0008D492 /* Sticker3.png */,
+			);
+			path = Stickers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -104,6 +124,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A1B2C3E61E28134F0008D492 /* Build configuration list for PBXNativeTarget "StickerPackExtension" */;
 			buildPhases = (
+				A1B2C4101E28134F0008D492 /* Sources */,
 				A1B2C3DB1E28134F0008D492 /* Resources */,
 			);
 			buildRules = (
@@ -113,7 +134,7 @@
 			name = StickerPackExtension;
 			productName = StickerPackExtension;
 			productReference = A1B2C3DD1E28134F0008D492 /* StickerPackExtension.appex */;
-			productType = "com.apple.product-type.app-extension.messages-sticker-pack";
+			productType = "com.apple.product-type.app-extension.messages";
 		};
 /* End PBXNativeTarget section */
 
@@ -130,6 +151,7 @@
 					};
 					A1B2C3DC1E28134F0008D492 = {
 						CreatedOnToolsVersion = 16.0;
+						LastSwiftMigration = 1600;
 					};
 				};
 			};
@@ -166,10 +188,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1B2C3E21E28134F0008D492 /* Stickers.xcstickers in Resources */,
+				A1B2C4121E28134F0008D492 /* Sticker1.png in Resources */,
+				A1B2C4131E28134F0008D492 /* Sticker2.png in Resources */,
+				A1B2C4141E28134F0008D492 /* Sticker3.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1B2C4101E28134F0008D492 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1B2C4111E28134F0008D492 /* MessagesViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
 		A1B2C3E01E28134F0008D493 /* PBXTargetDependency */ = {
@@ -274,6 +310,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -281,10 +318,17 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Mari Summers";
 				INFOPLIST_KEY_NSStickerSharingLevel = OS;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sunnymari.MariSummersStickers.StickerPackExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -293,6 +337,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -300,10 +345,16 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Mari Summers";
 				INFOPLIST_KEY_NSStickerSharingLevel = OS;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sunnymari.MariSummersStickers.StickerPackExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

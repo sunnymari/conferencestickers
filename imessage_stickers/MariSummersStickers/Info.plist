@@ -22,6 +22,11 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>MSSupportedPresentationContexts</key>
+	<array>
+		<string>MSMessagesAppPresentationContextMessages</string>
+		<string>MSMessagesAppPresentationContextMedia</string>
+	</array>
 	<key>NSStickerSharingLevel</key>
 	<string>OS</string>
 	<key>UILaunchStoryboardName</key>
