@@ -3,6 +3,17 @@ On a budget but want to pass out stickers for your next conference ? This repo h
 
 Mari Summers stickers for iMessage, Telegram, and Discord, generated from the same three PNGs.
 
+## Download
+
+**Telegram pack (scan or tap):** [https://t.me/addstickers/MariSummers_by_starcove_mari_bot](https://t.me/addstickers/MariSummers_by_starcove_mari_bot)
+
+**QR code** (print this for the conference table):
+[stickers/telegram/mari-summers-addstickers-qr.png](https://github.com/sunnymari/conferencestickers/blob/main/stickers/telegram/mari-summers-addstickers-qr.png)
+
+Direct download: [raw PNG](https://raw.githubusercontent.com/sunnymari/conferencestickers/main/stickers/telegram/mari-summers-addstickers-qr.png)
+
+Discord upload files: [stickers/discord/](https://github.com/sunnymari/conferencestickers/tree/main/stickers/discord)
+
 ## Telegram
 ```bash
 pip install -r requirements.txt
