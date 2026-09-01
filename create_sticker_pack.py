@@ -1,68 +1,159 @@
 """
-Creates a Telegram sticker pack from a local PNG using the Bot API.
+Create (or update) the Mari Summers Telegram sticker pack.
 
-Setup:
-    pip install requests python-dotenv
+Needs TELEGRAM_BOT_TOKEN in .env. Optional TELEGRAM_USER_ID; if omitted,
+the script uses the last person who sent /start to the bot.
 
-Usage:
+    python prepare_stickers.py
     python create_sticker_pack.py
 """
 
+from __future__ import annotations
+
+import json
 import os
+import sys
+from pathlib import Path
+
 import requests
 from dotenv import load_dotenv
 
-load_dotenv()  # reads TELEGRAM_BOT_TOKEN from .env in this folder
+from prepare_stickers import prepare
 
-TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
-BASE_URL = f"https://api.telegram.org/bot{TOKEN}"
+ROOT = Path(__file__).resolve().parent
+load_dotenv(ROOT / ".env")
 
-# --- fill these in ---
-YOUR_TELEGRAM_USER_ID = 123456789          # get this from @userinfobot on Telegram
-BOT_USERNAME = "your_bot_username_bot"     # must match the bot BotFather just registered
-PACK_NAME = f"mari_summers_by_{BOT_USERNAME}"  # Telegram requires this "by_<bot>" suffix
 PACK_TITLE = "Mari Summers"
-STICKER_FILE = "telegram_mari_summers_sticker.png"
-STICKER_EMOJI = "✨"
 
 
-def create_pack():
-    with open(STICKER_FILE, "rb") as f:
-        resp = requests.post(
-            f"{BASE_URL}/createNewStickerSet",
-            data={
-                "user_id": YOUR_TELEGRAM_USER_ID,
-                "name": PACK_NAME,
-                "title": PACK_TITLE,
-                "sticker_format": "static",
-                "stickers": (
-                    '[{"sticker": "attach://sticker1", '
-                    f'"emoji_list": ["{STICKER_EMOJI}"]}}]'
-                ),
-            },
-            files={"sticker1": f},
+def api(token: str, method: str, **kwargs) -> dict:
+    url = f"https://api.telegram.org/bot{token}/{method}"
+    resp = requests.post(url, timeout=60, **kwargs)
+    data = resp.json()
+    return data
+
+
+def require_token() -> str:
+    token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+    if not token or token == "your_bot_token_here":
+        sys.exit("Set TELEGRAM_BOT_TOKEN in .env (from @BotFather).")
+    return token
+
+
+def bot_username(token: str) -> str:
+    me = api(token, "getMe")
+    if not me.get("ok"):
+        sys.exit(f"getMe failed: {me}")
+    username = me["result"]["username"]
+    print(f"Bot: @{username}")
+    return username
+
+
+def resolve_user_id(token: str) -> int:
+    raw = os.environ.get("TELEGRAM_USER_ID", "").strip()
+    if raw:
+        return int(raw)
+
+    updates = api(token, "getUpdates", data={"timeout": 0})
+    if not updates.get("ok"):
+        sys.exit(f"getUpdates failed: {updates}")
+    user_ids = []
+    for update in updates.get("result", []):
+        msg = update.get("message") or update.get("edited_message") or {}
+        from_user = msg.get("from") or {}
+        if from_user.get("id") and not from_user.get("is_bot"):
+            user_ids.append(from_user["id"])
+    if user_ids:
+        user_id = user_ids[-1]
+        print(f"Using Telegram user id {user_id} from the last message to the bot.")
+        return user_id
+
+    sys.exit(
+        "No TELEGRAM_USER_ID in .env, and nobody has messaged the bot yet.\n"
+        "Open Telegram, send /start to your bot, then run this script again.\n"
+        "Or paste your numeric id from @userinfobot into TELEGRAM_USER_ID in .env."
+    )
+
+
+def pack_name(username: str) -> str:
+    return f"MariSummers_by_{username}"
+
+
+def build_files_and_stickers(prepared: list[dict]) -> tuple[dict, list[dict]]:
+    files = {}
+    stickers = []
+    for i, item in enumerate(prepared, start=1):
+        attach = f"sticker{i}"
+        files[attach] = (f"{item['slug']}.png", item["telegram"].read_bytes(), "image/png")
+        stickers.append(
+            {
+                "sticker": f"attach://{attach}",
+                "format": "static",
+                "emoji_list": [item["emoji"]],
+                "keywords": item["keywords"],
+            }
         )
-    result = resp.json()
-    if result.get("ok"):
-        print(f"Pack created: https://t.me/addstickers/{PACK_NAME}")
-    else:
-        print("Failed:", result)
+    return files, stickers
 
 
-def add_sticker(sticker_path: str, emoji: str):
-    """Call this again with a new file to add more stickers to the same pack."""
-    with open(sticker_path, "rb") as f:
-        resp = requests.post(
-            f"{BASE_URL}/addStickerToSet",
-            data={
-                "user_id": YOUR_TELEGRAM_USER_ID,
-                "name": PACK_NAME,
-                "sticker": f'{{"sticker": "attach://sticker1", "emoji_list": ["{emoji}"]}}',
-            },
-            files={"sticker1": f},
-        )
-    print(resp.json())
+def create_or_update(token: str, user_id: int, name: str, prepared: list[dict]) -> None:
+    existing = api(token, "getStickerSet", data={"name": name})
+    files, stickers = build_files_and_stickers(prepared)
+
+    if existing.get("ok"):
+        count = len(existing["result"].get("stickers") or [])
+        print(f"Pack already exists with {count} sticker(s). Adding any new ones.")
+        for i, sticker in enumerate(stickers, start=1):
+            attach = f"sticker{i}"
+            result = api(
+                token,
+                "addStickerToSet",
+                data={
+                    "user_id": user_id,
+                    "name": name,
+                    "sticker": json.dumps(
+                        {
+                            "sticker": f"attach://{attach}",
+                            "format": sticker["format"],
+                            "emoji_list": sticker["emoji_list"],
+                            "keywords": sticker["keywords"],
+                        }
+                    ),
+                },
+                files={attach: files[attach]},
+            )
+            if result.get("ok"):
+                print(f"  added {files[attach][0]}")
+            else:
+                print(f"  skip {files[attach][0]}: {result.get('description')}")
+        return
+
+    result = api(
+        token,
+        "createNewStickerSet",
+        data={
+            "user_id": user_id,
+            "name": name,
+            "title": PACK_TITLE,
+            "sticker_type": "regular",
+            "stickers": json.dumps(stickers),
+        },
+        files=files,
+    )
+    if not result.get("ok"):
+        sys.exit(f"createNewStickerSet failed: {result}")
+    print("Pack created.")
+
+
+def main() -> None:
+    token = require_token()
+    username = bot_username(token)
+    user_id = resolve_user_id(token)
+    name = pack_name(username)
+    prepared = prepare()
+    create_or_update(token, user_id, name, prepared)
+    print(f"Add the pack: https://t.me/addstickers/{name}")
 
 
 if __name__ == "__main__":
-    create_pack()
+    main()
